@@ -1,27 +1,15 @@
-import requests
+from task3_1 import LOCAL_FILE
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, DoubleType, StringType
 from pyspark.ml.feature import VectorAssembler, StringIndexer, IndexToString
 from pyspark.ml.classification import LogisticRegression
-from pyspark.ml import Pipeline
 from pyspark.sql.functions import col, when
-
-URL = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
-LOCAL_FILE = 'data/iris.csv'
 
 spark = SparkSession \
     .builder \
     .appName("Python Spark SQL basic example") \
     .config("spark.some.config.option", "some-value") \
     .getOrCreate()
-
-
-
-def download_iris_data():
-    url = URL
-    r = requests.get(url)
-    with open(LOCAL_FILE, 'wb') as f:
-        f.write(r.content)
 
 def get_schema():
     return StructType([StructField("sepal_length", DoubleType(), True),
@@ -49,7 +37,6 @@ def prepare_model(df):
     transformed_df = vector_assembler.transform(df)
     selectedCols = ['features', 'class_index']
     final_df = transformed_df.select(selectedCols)
-    print(final_df.show())
     log_reg = LogisticRegression(featuresCol='features',
                                 labelCol='class_index',
                                 regParam=100000)
@@ -67,9 +54,7 @@ def predict_class(df, vector_assembler, lrModel):
         .format('csv')
         .save('out/out_3_2.txt'))
 
-
 def main():
-    #download_iris_data()
     df = load_data()
     pipelineModel, lrModel = prepare_model(df)
     test_df = spark.createDataFrame(
