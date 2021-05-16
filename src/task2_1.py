@@ -1,12 +1,17 @@
 from pyspark.sql import SparkSession
+from pyspark.sql.dataframe import DataFrame
 
 spark = SparkSession \
     .builder \
-    .appName("Python Spark SQL basic example") \
-    .config("spark.some.config.option", "some-value") \
+    .appName("Truata") \
     .getOrCreate()
 
-def load_data():
+def load_data() -> DataFrame:
+    """[task 1 - loads csv data into dataframe]
+
+    Returns:
+        [DataFrame]: [spark dataframe]
+    """
     return spark.read.format('parquet').load('data/sf-airbnb-clean.parquet')
 
 def main():

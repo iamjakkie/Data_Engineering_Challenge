@@ -1,9 +1,15 @@
 import pyspark.sql.functions as f
 from task2_1 import load_data
 from pyspark.sql.window import Window
+from pyspark.sql.dataframe import DataFrame
 
 
-def accomodate_people(df):
+def accomodate_people(df:DataFrame):
+    """[calculate accommodation possibilities for the lowest price and highest rating]
+
+    Args:
+        df (DataFrame): [spark dataframe]
+    """
     (df.withColumn("rank_ranking",f.rank().over(Window.orderBy(f.desc("review_scores_value"))))
         .withColumn("price_ranking", f.rank().over(Window.orderBy("price")))
         .filter((f.col('rank_ranking') == 1) & (f.col("price_ranking")==1))

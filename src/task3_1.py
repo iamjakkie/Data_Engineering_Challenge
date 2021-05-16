@@ -4,6 +4,8 @@ URL = 'https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data'
 LOCAL_FILE = 'data/iris.csv'
 
 def download_iris_data():
+    """[download iris data into csv]
+    """
     url = URL
     r = requests.get(url)
     with open(LOCAL_FILE, 'wb') as f:

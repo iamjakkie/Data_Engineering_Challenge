@@ -1,11 +1,17 @@
 from task1_1 import read_to_rdd
 from pyspark.context import SparkContext
+from pyspark.rdd import RDD
 
 def explode(row):
     for k in row:
         yield k
 
-def list_top_purchased_products(rdd):
+def list_top_purchased_products(rdd:RDD):
+    """[task 3 - saves top 5 purchased products into txt file]
+
+    Args:
+        rdd (RDD): [spark RDD]
+    """
     sc = SparkContext.getOrCreate()
     rdd = (sc.parallelize(rdd.flatMap(explode)
         .map(lambda w: (w,1))
